@@ -1,0 +1,35 @@
+# Node & Build
+node_modules/
+dist/
+dist.bak*/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Server & Runtime Logs
+*.log
+server.log
+
+# Env & Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+
+# Data: contains customer info + auth hashes
+data/
+!data/.gitkeep
+
+# OS & Shortcuts/System files
+.DS_Store
+Thumbs.db
+*.lnk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Auth session caches & exports
+*.token
+*.csv
