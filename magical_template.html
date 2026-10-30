@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>จดหมายมหัศจรรย์จาก NICHE BLOOMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f6f0e1; --cream2:#efe6cf; --gold:#b8913a; --gold2:#d9b85c;
+    --ink:#3a2e1f; --wax:#7a1f2b; --wax2:#a83243;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%}
+  body{
+    font-family:'Noto Serif Thai',serif; color:var(--ink);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(217,184,92,.18), transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(184,145,58,.15), transparent 50%),
+      linear-gradient(160deg, #f8f3e6 0%, #efe5cc 100%);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:24px 14px; overflow-x:hidden; position:relative;
+  }
+  #dust{position:fixed; inset:0; pointer-events:none; z-index:1}
+  .particle{position:absolute; width:4px; height:4px; border-radius:50%;
+    background:radial-gradient(circle, var(--gold2), transparent 70%);
+    opacity:0; animation:floatUp linear infinite}
+  @keyframes floatUp{
+    0%{transform:translateY(20px); opacity:0}
+    15%{opacity:.8}
+    100%{transform:translateY(-90vh); opacity:0}
+  }
+
+  .stage{position:relative; z-index:2; width:100%; max-width:460px; display:flex; flex-direction:column; align-items:center}
+
+  /* ---------- ENVELOPE ---------- */
+  #envelope{position:relative; width:100%; aspect-ratio: 3/2; max-width:420px;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--cream2) 100%);
+    border:1.5px solid var(--gold); border-radius:6px;
+    box-shadow:0 18px 40px rgba(58,46,31,.28);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  #envelope .flap{position:absolute; top:0; left:0; right:0; height:55%;
+    background:linear-gradient(180deg, #efe6cf, #e5d8b8);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    border-bottom:1px solid rgba(184,145,58,.4);
+    transform-origin:top center; transition:transform .9s cubic-bezier(.5,.1,.2,1);
+  }
+  #envelope.opened{opacity:0; transform:scale(.9) translateY(10px); pointer-events:none}
+  #envelope.opened .flap{transform:rotateX(180deg)}
+
+  #wax{position:relative; z-index:3; width:92px; height:92px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--wax2), var(--wax) 60%, #5a141e 100%);
+    box-shadow:0 6px 14px rgba(90,20,30,.5), inset 0 -3px 8px rgba(0,0,0,.3), inset 0 3px 6px rgba(255,255,255,.15);
+    border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:transform .25s ease; animation:pulse 2.2s ease-in-out infinite;
+  }
+  #wax:hover{transform:scale(1.06)}
+  #wax:active{transform:scale(.96)}
+  @keyframes pulse{0%,100%{box-shadow:0 6px 14px rgba(90,20,30,.5), inset 0 -3px 8px rgba(0,0,0,.3), inset 0 3px 6px rgba(255,255,255,.15), 0 0 0 0 rgba(168,50,67,.45)}50%{box-shadow:0 6px 14px rgba(90,20,30,.5), inset 0 -3px 8px rgba(0,0,0,.3), inset 0 3px 6px rgba(255,255,255,.15), 0 0 0 14px rgba(168,50,67,0)}}
+  #wax img{width:58px; height:58px; object-fit:contain; filter:drop-shadow(0 1px 1px rgba(0,0,0,.4)); opacity:.95}
+  .hint{margin-top:18px; font-size:14px; color:var(--gold); letter-spacing:1px; text-align:center; animation:hintBlink 2s ease-in-out infinite}
+  @keyframes hintBlink{0%,100%{opacity:.55}50%{opacity:1}}
+  .brand-line{font-family:'Cinzel',serif; letter-spacing:3px; font-size:13px; color:var(--gold); margin-bottom:16px; text-align:center}
+
+  /* ---------- LETTER ---------- */
+  #letter{width:100%; max-width:460px; opacity:0; transform:scaleY(.15) translateY(40px);
+    transform-origin:top center; transition:opacity .5s ease .3s, transform 1.1s cubic-bezier(.22,.9,.3,1.1) .3s;
+    background:linear-gradient(180deg, #fbf6e9 0%, #f4ead2 100%);
+    border:1px solid var(--gold); border-radius:8px; padding:26px 22px 22px;
+    box-shadow:0 20px 50px rgba(58,46,31,.3); position:relative; display:none;
+  }
+  #letter.show{display:block}
+  #letter.unfolded{opacity:1; transform:scaleY(1) translateY(0); animation:floaty 5s ease-in-out infinite 1.6s}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-.3deg)}50%{transform:translateY(-7px) rotate(.3deg)}}
+  #letter::before{content:""; position:absolute; inset:6px; border:1px solid rgba(184,145,58,.55); border-radius:5px; pointer-events:none}
+
+  .l-head{text-align:center; margin-bottom:14px}
+  .l-head img{width:74px; height:74px; object-fit:contain; margin-bottom:6px}
+  .l-brand{font-family:'Cinzel',serif; font-weight:700; letter-spacing:4px; font-size:18px; color:var(--ink)}
+  .l-sub{font-family:'Cinzel',serif; letter-spacing:2.5px; font-size:9.5px; color:var(--gold); margin-top:2px}
+  .ornament{text-align:center; color:var(--gold); margin:10px 0; letter-spacing:6px; font-size:12px}
+
+  .l-greet{font-size:17px; font-weight:700; margin-bottom:10px}
+  .l-body{font-size:14.5px; line-height:1.85; margin-bottom:14px; text-align:justify}
+  .l-body .magic{color:var(--gold); font-weight:600}
+
+  .items{border-top:1px solid rgba(184,145,58,.4); border-bottom:1px solid rgba(184,145,58,.4); padding:10px 0; margin-bottom:12px}
+  .it{display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; font-size:14px}
+  .it .name{font-weight:600}
+  .it .note{font-size:11.5px; color:#7a6a4f; display:block}
+  .it .amt{font-weight:700; color:var(--ink); white-space:nowrap; margin-left:10px}
+  .total{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:8px 4px}
+  .total .lbl{font-size:15px; font-weight:700}
+  .total .val{font-size:22px; font-weight:700; color:var(--gold); font-family:'Cinzel',serif}
+
+  .qrbox{display:flex; gap:14px; align-items:center; background:rgba(255,255,255,.5); border:1px solid rgba(184,145,58,.4); border-radius:8px; padding:12px; margin-bottom:14px}
+  .qrbox img{width:108px; height:108px; border-radius:6px; background:#fff; padding:4px}
+  .qrbox .info{font-size:12.5px; line-height:1.7}
+  .qrbox .info b{color:var(--gold)}
+
+  .tts-row{display:flex; gap:10px; align-items:center; justify-content:center; margin-bottom:10px}
+  .tts-btn{font-family:'Noto Serif Thai',serif; font-size:13px; padding:9px 18px; border-radius:20px; border:1px solid var(--gold); background:linear-gradient(180deg,#fff8e7,#f0e2bd); color:var(--ink); cursor:pointer; transition:transform .15s}
+  .tts-btn:hover{transform:translateY(-1px)}
+  .tts-note{font-size:11px; color:#7a6a4f; text-align:center}
+
+  .l-foot{text-align:center; font-size:12px; color:#7a6a4f; margin-top:8px; border-top:1px solid rgba(184,145,58,.3); padding-top:10px}
+  .meta{font-size:11px; color:#7a6a4f; text-align:center; margin-bottom:10px}
+
+  #notfound{text-align:center; padding:40px 20px; display:none}
+  #notfound h2{font-family:'Cinzel',serif; color:var(--gold); margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="dust"></div>
+
+<div class="stage">
+  <!-- ENVELOPE -->
+  <div id="envelope">
+    <div class="flap"></div>
+    <button id="wax" aria-label="แตะตรประทับเพื่อเปิดจดหมาย">
+      <img src="__LOGO_B64__" alt="NICHE BLOOMS">
+    </button>
+  </div>
+  <div class="brand-line">NICHE BLOOMS</div>
+  <div class="hint" id="hint">✦ แตะตรประทับขี้ผึ้งเพื่อเปิดจดหมาย ✦</div>
+
+  <!-- LETTER -->
+  <div id="letter">
+    <div class="l-head">
+      <img src="__LOGO_B64__" alt="NICHE BLOOMS">
+      <div class="l-brand">NICHE BLOOMS</div>
+      <div class="l-sub">CAREFULLY SELECTED FOR YOU</div>
+    </div>
+    <div class="ornament">❦ ❦ ❦</div>
+    <div class="meta" id="meta"></div>
+    <div class="l-greet" id="greet"></div>
+    <div class="l-body" id="body"></div>
+    <div class="items" id="items"></div>
+    <div class="total"><span class="lbl">ยอดรวมที่ต้องชำระ</span><span class="val" id="total"></span></div>
+    <div class="qrbox">
+      <img id="qr" alt="PromptPay QR">
+      <div class="info">
+        __PROMPTPAY_INFO__
+      </div>
+    </div>
+    <div class="tts-row">
+      <button class="tts-btn" id="replay">🔊 ฟังจดหมายอีกครั้ง</button>
+    </div>
+    <div class="tts-note" id="ttsnote"></div>
+    <div class="l-foot">ขอบคุณที่ใช้บริการ NICHE BLOOMS ✦ ขอให้มีความสุขมากๆ ค่ะ</div>
+  </div>
+
+  <div id="notfound">
+    <h2>จดหมายไม่พบ</h2>
+    <p>ไม่พบจดหมายสำหรับผู้รับนี้ กรุณาตรวจสอบลิงก์ที่ได้รับมาอีกครั้งค่ะ</p>
+  </div>
+</div>
+
+<script>
+const CUSTOMERS = __CUSTOMERS_JSON__;
+const LOGO = "__LOGO_B64__";
+
+// gold dust
+(function(){
+  const dust = document.getElementById('dust');
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span'); s.className='particle';
+    s.style.left = Math.random()*100+'vw';
+    s.style.bottom = '-10px';
+    s.style.animationDuration = (6+Math.random()*8)+'s';
+    s.style.animationDelay = (Math.random()*8)+'s';
+    s.style.transform = 'scale('+(0.5+Math.random()*1.3)+')';
+    dust.appendChild(s);
+  }
+})();
+
+function fmt(n){ return n.toLocaleString('th-TH',{minimumFractionDigits:0, maximumFractionDigits:0})+' บาท'; }
+
+function getCustomer(){
+  const h = (location.hash||'').replace('#','').trim();
+  return CUSTOMERS.find(c=>c.id===h) || null;
+}
+
+const cust = getCustomer();
+const envelope = document.getElementById('envelope');
+const letter = document.getElementById('letter');
+const notfound = document.getElementById('notfound');
+
+if(!cust){
+  envelope.style.display='none';
+  document.getElementById('hint').style.display='none';
+  document.querySelector('.brand-line').style.display='none';
+  notfound.style.display='block';
+} else {
+  // render letter content
+  document.getElementById('meta').textContent = 'เลขที่ใบเสร็จ: '+cust.receipt_no+'   |   วันที่ออกบิล: '+cust.date;
+  document.getElementById('greet').textContent = 'เรียน '+cust.name+' ค่ะ';
+  document.getElementById('body').innerHTML =
+    'ด้วย<span class="magic">เวทมนตร์แห่งดอกไม้</span> ขอแจ้งว่าท่านมียอดค้างชำระในรอบนี้ '
+    +'รายการดังต่อไปนี้ เมื่อชำระเรียบร้อยแล้ว เวทมนตร์จะปลดปล่อยท่านจากบัญชีหนี้เสมอกค่ะ';
+  const itemsEl = document.getElementById('items');
+  cust.items.forEach(it=>{
+    const d=document.createElement('div'); d.className='it';
+    d.innerHTML = '<span><span class="name">'+it.item+'</span><span class="note">'+it.note+'</span></span>'
+      +'<span class="amt">'+it.amount.toLocaleString('th-TH')+'</span>';
+    itemsEl.appendChild(d);
+  });
+  document.getElementById('total').textContent = fmt(cust.total);
+  document.getElementById('qr').src = cust.qr_b64;
+
+  // TTS narration
+  function narrationText(){
+    let t = 'เรียน '+cust.name+' ค่ะ ทาง NICHE BLOOMS ขอแจ้งว่าท่านมียอดค้างชำระในวันนี้ ';
+    cust.items.forEach((it,i)=>{ t += 'รายการที่ '+(i+1)+' '+it.item+' จำนวน '+it.amount+' บาท '; });
+    t += 'รวมทั้งหมด '+cust.total+' บาท ท่านสามารถสแกนคิวอาร์โค้ดพร้อมเพย์ในจดหมายเพื่อชำระเงินได้ทันที ขอบคุณค่ะ';
+    return t;
+  }
+  let ttsOK = ('speechSynthesis' in window);
+  document.getElementById('ttsnote').textContent = ttsOK ? 'เสียงจะเล่นอัตโนมัติหลังเปิดจดหมาย' : 'เบราว์เซอร์นี้ไม่รองรับเสียงพูด';
+  function speak(){
+    if(!ttsOK) return;
+    try{
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(narrationText());
+      u.lang = 'th-TH'; u.rate = 0.92; u.pitch = 1.05; u.volume = 1;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  document.getElementById('replay').addEventListener('click', speak);
+
+  // open on wax tap
+  document.getElementById('wax').addEventListener('click', function(){
+    envelope.classList.add('opened');
+    setTimeout(function(){ envelope.style.display='none'; }, 650);
+    letter.classList.add('show');
+    document.getElementById('hint').style.display='none';
+    document.querySelector('.brand-line').style.display='none';
+    requestAnimationFrame(()=>{ setTimeout(()=>letter.classList.add('unfolded'), 60); });
+    setTimeout(speak, 1500); // auto TTS after unfold
+  });
+}
+</script>
+</body>
+</html>

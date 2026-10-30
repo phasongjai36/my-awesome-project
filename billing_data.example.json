@@ -1,0 +1,44 @@
+{
+  "_คำแนะนำ": "ตัวอย่างข้อมูล — คัดลอกเป็น billing_data.json แล้วแก้ข้อมูลจริง (billing_data.json ถูก gitignore ไว้)",
+  "metadata": {
+    "shop_name": "NICHE BLOOMS",
+    "shop_subtitle": "CAREFULLY SELECTED FOR YOU",
+    "promptpay_id": "",
+    "promptpay_id_type": "citizen",
+    "promptpay_account_name": "",
+    "merchant_name": "NICHE BLOOMS",
+    "merchant_city": "BANGKOK",
+    "report_date": "2026-10-25",
+    "receipt_footer": "กรุณาชำระเงินโดยสแกน QR ด้านล่าง ยอดจะตรงกับจำนวนเงินที่แนบใน QR อัตโนมัติ"
+  },
+  "customers": [
+    {
+      "id": "cus-1",
+      "name": "คุณ ลูกค้าตัวอย่าง 1",
+      "contracts": [
+        {
+          "item": "รายการตัวอย่าง",
+          "per_installment": 216,
+          "total_installments": 4,
+          "paid_installments": 2,
+          "amount_due": 216,
+          "due_note": "งวดที่ 3/4 — ครบกำหนด 2026-10-20"
+        }
+      ]
+    },
+    {
+      "id": "cus-2",
+      "name": "คุณ ลูกค้าตัวอย่าง 2",
+      "contracts": [
+        {
+          "item": "รายการตัวอย่าง",
+          "per_installment": 4297,
+          "total_installments": 9,
+          "paid_installments": 4,
+          "amount_due": 4297,
+          "due_note": "งวดที่ 5/9 — ครบกำหนด 2026-10-25"
+        }
+      ]
+    }
+  ]
+}

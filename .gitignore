@@ -33,3 +33,30 @@ Thumbs.db
 # Auth session caches & exports
 *.token
 *.csv
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# ---------- ข้อมูลลูกค้าจริง + เลขพร้อมเพย์ (ห้าม commit ขึ้น repo สาธารณะ) ----------
+# billing_data.json          — ชื่อลูกค้า + ยอดค้างชำระจริง
+# NicheBlooms_Data.xlsx      — ตารางข้อมูลลูกค้าต้นทาง
+# output/                    — ใบเสร็จ PDF + QR PNG ที่ฝังเลขพร้อมเพย์จริง
+# assets/receipt_sample.jpg  — ภาพใบเสร็จจริง (มีชื่อลูกค้า + เลขพร้อมเพย์)
+# assets/logo1.jpg, logo2.jpg — ภาพใบเสร็จจริง
+# assets/upload_latest.jpeg  — ภาพหน้าจอส่วนตัว
+billing_data.json
+*.xlsx
+output/
+niche_blooms_magical_letter.html
+preview_opened.html
+letter_preview.jpg
+assets/receipt_sample.jpg
+assets/logo1.jpg
+assets/logo2.jpg
+assets/upload_latest.jpeg
