@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 สร้างจดหมายมหัศจรรย์ (ไม่ตัดโลโก้ใหม่) — ใช้โลโก้ที่ตัดไว้แล้วใน assets/logo_transparent.png
 
@@ -7,6 +5,7 @@
 
 ถ้ายังไม่มีโลโก้ ให้รัน `python3 build_magical.py` ก่อน (หรือ copy ไฟล์โลโก้มาไว้ใน assets/)
 """
+
 from build_magical import build_letter
 
 if __name__ == "__main__":

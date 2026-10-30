@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 สร้างใบเสร็จ PDF + QR PromptPay (ฝังยอดชำระ) จาก billing_data.json
 
@@ -11,6 +9,7 @@
 หมายเหตุ: billing_data.json, .env และโฟลเดอร์ output/ ถูก .gitignore ไว้
 เพราะเป็นข้อมูลลูกค้าและเลขพร้อมเพย์จริง — อย่าฝากขึ้น repo สาธารณะ
 """
+
 import json
 from pathlib import Path
 
@@ -18,7 +17,7 @@ import qrcode
 from reportlab.lib.pagesizes import A4, A5
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.ttfonts import TTFError, TTFont
 from reportlab.pdfgen import canvas
 
 from config import BASE, resolve_promptpay
@@ -63,7 +62,7 @@ def _register_fonts() -> None:
     try:
         pdfmetrics.registerFont(TTFont("NotoThai", regular))
         pdfmetrics.registerFont(TTFont("NotoThai-Bold", bold))
-    except Exception:
+    except (OSError, TTFError):
         return
     F, FB = "NotoThai", "NotoThai-Bold"
 
@@ -72,7 +71,9 @@ _register_fonts()
 
 
 def make_qr_png(payload: str, path: Path) -> Path:
-    qr = qrcode.QRCode(box_size=10, border=2, error_correction=qrcode.constants.ERROR_CORRECT_M)
+    qr = qrcode.QRCode(
+        box_size=10, border=2, error_correction=qrcode.constants.ERROR_CORRECT_M
+    )
     qr.add_data(payload)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
@@ -85,7 +86,9 @@ def fmt(baht: float) -> str:
 
 
 # ---------- วาดใบเสร็จ A5 ----------
-def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[Path, float]:
+def draw_receipt(
+    customer: dict, meta: dict, pp_id: str, pp_type: str
+) -> tuple[Path, float]:
     cid = customer["id"]
     name = customer["name"]
     contracts = customer["contracts"]
@@ -106,7 +109,9 @@ def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[
     pdf.drawCentredString(width / 2, y, meta["shop_subtitle"])
     y -= 5 * mm
     pdf.setFont(F, 8.5)
-    pdf.drawCentredString(width / 2, y, f"วันที่ออก: {meta['report_date']}   |   เลขที่: {ref}")
+    pdf.drawCentredString(
+        width / 2, y, f"วันที่ออก: {meta['report_date']}   |   เลขที่: {ref}"
+    )
     y -= 4 * mm
     pdf.setDash(2, 2)
     pdf.line(margin, y, width - margin, y)
@@ -131,7 +136,9 @@ def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[
         paid = contract["paid_installments"]
         total_installments = contract["total_installments"]
         pdf.drawString(
-            col_item, y, f"• {contract['item']}  (จ่ายแล้ว {paid}/{total_installments} งวด)"
+            col_item,
+            y,
+            f"• {contract['item']}  (จ่ายแล้ว {paid}/{total_installments} งวด)",
         )
         pdf.drawRightString(col_amt, y, fmt(contract["amount_due"]))
         y -= 4.5 * mm
@@ -166,7 +173,9 @@ def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[
     box_top = y
     box_h = 62 * mm
     pdf.setStrokeColorRGB(0.2, 0.2, 0.2)
-    pdf.roundRect(margin, box_top - box_h, width - 2 * margin, box_h, 3 * mm, stroke=1, fill=0)
+    pdf.roundRect(
+        margin, box_top - box_h, width - 2 * margin, box_h, 3 * mm, stroke=1, fill=0
+    )
     pdf.setFont(FB, 10)
     pdf.drawCentredString(width / 2, box_top - 6 * mm, "สแกน QR PromptPay เพื่อชำระเงิน")
     pdf.setFont(F, 8)
@@ -185,7 +194,9 @@ def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[
         height=qr_size,
     )
     pdf.setFont(FB, 11)
-    pdf.drawCentredString(width / 2, box_top - box_h + 6 * mm, f"ยอดชำระ: {fmt(total)} บาท")
+    pdf.drawCentredString(
+        width / 2, box_top - box_h + 6 * mm, f"ยอดชำระ: {fmt(total)} บาท"
+    )
 
     y = box_top - box_h - 6 * mm
     pdf.setFont(F, 7.5)
@@ -207,7 +218,9 @@ def draw_receipt(customer: dict, meta: dict, pp_id: str, pp_type: str) -> tuple[
 
 
 # ---------- สรุป A4 ----------
-def draw_summary(rows: list[tuple[str, int, float]], grand_total: float, meta: dict) -> Path:
+def draw_summary(
+    rows: list[tuple[str, int, float]], grand_total: float, meta: dict
+) -> Path:
     out_pdf = OUT / "00_summary_all_customers.pdf"
     width, height = A4
     margin = 15 * mm
@@ -219,7 +232,9 @@ def draw_summary(rows: list[tuple[str, int, float]], grand_total: float, meta: d
     y -= 7 * mm
     pdf.setFont(F, 9)
     pdf.drawString(
-        margin, y, f"วันที่ออก: {meta['report_date']}   |   ยอดรวมทั้งหมด: {fmt(grand_total)} บาท"
+        margin,
+        y,
+        f"วันที่ออก: {meta['report_date']}   |   ยอดรวมทั้งหมด: {fmt(grand_total)} บาท",
     )
     y -= 4 * mm
     pdf.setFont(F, 8)
@@ -287,7 +302,9 @@ def main() -> None:
         pdf_path, total = draw_receipt(customer, meta, pp_id, pp_type)
         rows.append((customer["name"], len(customer["contracts"]), total))
         grand += total
-        print(f"[OK] {customer['id']} {customer['name']}: {total:,.2f} บาท -> {pdf_path.name}")
+        print(
+            f"[OK] {customer['id']} {customer['name']}: {total:,.2f} บาท -> {pdf_path.name}"
+        )
     summary_path = draw_summary(rows, grand, meta)
     print(f"[OK] summary -> {summary_path.name}")
     print(f"รวมยอดทั้งหมด: {grand:,.2f} บาท")

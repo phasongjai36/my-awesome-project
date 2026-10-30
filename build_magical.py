@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 สร้าง "จดหมายมหัศจรรย์" (magical letter) สำหรับส่งให้ลูกค้าทาง Line
 
@@ -10,11 +8,12 @@
 
 รัน:  python3 build_magical.py
 """
+
 import base64
 import json
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from config import resolve_account_name, resolve_promptpay
 from generate_receipts import DATA_FILE, make_qr_png
@@ -72,15 +71,10 @@ def _make_placeholder_logo() -> None:
     cream = (250, 246, 238, 255)
     gold = (150, 120, 70, 255)
     img = Image.new("RGBA", (width, height), cream)
-    try:
-        from PIL import ImageDraw
-
-        draw = ImageDraw.Draw(img)
-        draw.rectangle((6, 6, width - 7, height - 7), outline=gold, width=2)
-        draw.text((width / 2, 78), "ND NicheBlooms", fill=gold, anchor="mm")
-        draw.text((width / 2, 132), "NICHE BLOOMS", fill=gold, anchor="mm")
-    except Exception:
-        pass
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((6, 6, width - 7, height - 7), outline=gold, width=2)
+    draw.text((width / 2, 78), "ND NicheBlooms", fill=gold, anchor="mm")
+    draw.text((width / 2, 132), "NICHE BLOOMS", fill=gold, anchor="mm")
     img.save(LOGO_PNG)
     print(f"[OK] สร้าง placeholder logo: {LOGO_PNG.name}")
 
@@ -143,7 +137,9 @@ def build_letter() -> Path:
             ref,
         )
         qr_path = make_qr_png(payload, QR_TMP / f"real_{customer['id']}.png")
-        qr_b64 = "data:image/png;base64," + base64.b64encode(qr_path.read_bytes()).decode()
+        qr_b64 = (
+            "data:image/png;base64," + base64.b64encode(qr_path.read_bytes()).decode()
+        )
         customers.append(
             {
                 "id": customer["id"],
@@ -162,7 +158,9 @@ def build_letter() -> Path:
     html = html.replace("__PROMPTPAY_INFO__", _promptpay_info(meta, pp_id, pp_type))
     html = html.replace("__CUSTOMERS_JSON__", json.dumps(customers, ensure_ascii=False))
     OUT.write_text(html, encoding="utf-8")
-    print(f"[DONE] {OUT.name}  {OUT.stat().st_size // 1024} KB  |  {len(customers)} ลูกค้า")
+    print(
+        f"[DONE] {OUT.name}  {OUT.stat().st_size // 1024} KB  |  {len(customers)} ลูกค้า"
+    )
     return OUT
 
 

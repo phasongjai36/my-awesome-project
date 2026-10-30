@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 """ทดสอบตัวสร้าง QR payload ของ PromptPay (EMVCo) — ไม่ต้องใช้ dependency นอกจาก stdlib
 
 หมายเหตุ: เลขพร้อมเพย์ที่ใช้ทดสอบเป็นตัวเลขสมมติ (9999999999999) ไม่ใช่เลขจริงของร้าน
 """
+
 import pytest
 
 from config import load_env_file, resolve_promptpay
@@ -63,7 +63,9 @@ def test_format_promptpay_display():
 
 
 def test_build_promptpay_structure():
-    payload = build_promptpay(1234.50, FAKE_CITIZEN_ID, "citizen", "NICHE BLOOMS", "BANGKOK")
+    payload = build_promptpay(
+        1234.50, FAKE_CITIZEN_ID, "citizen", "NICHE BLOOMS", "BANGKOK"
+    )
     assert payload.startswith("000201")
     assert payload[-8:-4] == "6304"
     assert "5802TH" in payload
@@ -114,7 +116,7 @@ def test_verify_promptpay_rejects_garbage():
 def test_load_env_file_parses_quotes_and_comments(tmp_path):
     env_file = tmp_path / ".env"
     env_file.write_text(
-        "# comment line\nPROMPTPAY_ID=\"0899999999\"\n\nPROMPTPAY_ID_TYPE=phone\nBROKEN\n",
+        '# comment line\nPROMPTPAY_ID="0899999999"\n\nPROMPTPAY_ID_TYPE=phone\nBROKEN\n',
         encoding="utf-8",
     )
     values = load_env_file(env_file)

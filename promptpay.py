@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 PromptPay QR payload builder (EMVCo Merchant Presented Mode, per the BOT PromptPay standard).
 
@@ -12,6 +10,7 @@ Targets accepted by Thai banking apps:
   - citizen  13 digits (national ID)
   - wallet   15 digits (e-wallet)
 """
+
 from __future__ import annotations
 
 # PromptPay Merchant Account Information AID — required so bank apps recognise the QR.

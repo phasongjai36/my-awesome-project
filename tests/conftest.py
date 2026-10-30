@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """pytest conftest — ทำให้ import โมดูลของโปรเจกต์ได้โดยไม่ต้องติดตั้งแพ็กเกจ"""
+
 import sys
 from pathlib import Path
 

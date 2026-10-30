@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 การตั้งค่าของระบบ — โมดูลนี้ใช้แค่ standard library เท่านั้น
 เพื่อให้ทดสอบได้โดยไม่ต้องติดตั้ง qrcode/reportlab/Pillow
@@ -9,6 +7,7 @@
   2. ไฟล์ .env
   3. billing_data.json -> metadata.promptpay_id
 """
+
 import os
 from pathlib import Path
 
@@ -52,5 +51,7 @@ def resolve_account_name(meta: dict, env_path: Path | None = None) -> str:
     return (
         os.environ.get("PROMPTPAY_ACCOUNT_NAME")
         or env_file.get("PROMPTPAY_ACCOUNT_NAME")
-        or str(meta.get("promptpay_account_name") or meta.get("merchant_name") or "PAYMENT")
+        or str(
+            meta.get("promptpay_account_name") or meta.get("merchant_name") or "PAYMENT"
+        )
     )
